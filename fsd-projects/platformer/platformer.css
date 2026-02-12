@@ -1,10 +1,12 @@
 body {
   margin: 0px;
+  background-color: black;
 }
 
 canvas {
-  background-color: lightblue;
+  background: linear-gradient(130deg, rgb(31, 0, 29) 0%, rgb(80, 0, 74) 100%);
   margin: 20px;
+  padding: auto;
 }
 
 img {
