@@ -49,10 +49,10 @@ $(function () {
     createBadPlatform(500, 500, 100, 10, "rgb(163, 60, 163)");
     createBadPlatform(0, 400, 100, 10, "rgb(163, 60, 163)")
     createBadPlatform(500, 290, 100, 10, "rgb(163, 60, 163)")
-    createFakePlatform(500, 180, 100, 10, "rgb(238, 78, 78)")
+    createFakePlatform(500, 180, 100, 10, "rgb(186, 35, 93)")
     createPlatform(610, 180, 190, 10, "rgb(161, 32, 82)")
     createBadPlatform(190, 180, 10, 10, "rgb(163, 60, 163)")
-    createFakePlatform(0, 290, 100, 10, "rgb(238, 78, 78)")
+    createFakePlatform(0, 290, 100, 10, "rgb(186, 35, 93)")
 
 
     // TODO 3 - Create Collectables
