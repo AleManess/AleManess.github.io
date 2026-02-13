@@ -64,11 +64,11 @@ $(function () {
 
     
     // TODO 4 - Create Cannons
-    createCannon("top", 500, 1600, 60, 60)
-    createCannon("left", 50, 1500, 60, 60)
-    createCannon("bottom", 800, 1300, 60, 60)
-    createCannon("top", 1300, 1100, 60, 60)
-    createCannon("right", 780, 2000, 60, 60)
+    createCannon("top", 500, 1600, 60, 60);
+    createCannon("left", 50, 1500, 60, 60);
+    createCannon("bottom", 800, 1300, 60, 60);
+    createCannon("top", 1300, 1100, 60, 60);
+    createCannon("right", 780, 2000, 60, 60);
 
     
     
