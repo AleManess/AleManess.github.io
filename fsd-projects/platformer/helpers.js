@@ -505,7 +505,7 @@ function makeGrid() {
     }
     // add text indicating x value at top of game
     ctx.font = "125% serif";
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "white";
     ctx.fillText(
       i, // text
       i - 15, // x location

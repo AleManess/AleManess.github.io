@@ -28,7 +28,6 @@ $(function () {
 
     // TODO 1 - Enable the Grid
 
-
     // TODO 2 - Create Platforms
     createPlatform(400, 620, 400, 10, "rgb(161, 32, 82)");
     createPlatform(0, 500, 400, 10, "rgb(161, 32, 82)");
@@ -53,6 +52,7 @@ $(function () {
     createPlatform(610, 180, 190, 10, "rgb(161, 32, 82)")
     createBadPlatform(190, 180, 10, 10, "rgb(163, 60, 163)")
     createFakePlatform(0, 290, 100, 10, "rgb(186, 35, 93)")
+    createBadPlatform(800, 180, 10, 10, "rgb(163, 60, 163)")
 
 
     // TODO 3 - Create Collectables
