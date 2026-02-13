@@ -4,7 +4,7 @@ body {
 }
 
 canvas {
-  background: linear-gradient(130deg, rgb(31, 0, 29) 0%, rgb(80, 0, 74) 100%);
+  background: radial-gradient(closest-side, rgb(200, 8, 180), rgb(150, 8, 132), rgb(100, 8, 109), rgb(70, 8, 64), rgb(36, 2, 34));
   margin: 20px;
   padding: auto;
 }
