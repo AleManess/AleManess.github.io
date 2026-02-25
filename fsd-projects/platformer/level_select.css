@@ -1,0 +1,61 @@
+body {
+  background: radial-gradient(circle, rgb(18, 5, 50), rgb(45, 10, 132));
+  overflow: hidden;
+}
+
+.tophead {
+  display: grid;
+  place-items: center;
+  height: 10vh;
+  box-sizing: border-box;
+}
+
+.tophead h1 {
+  font-family: "Press Start 2P", monospace;
+  font-size: 50px;
+  color: rgb(25, 143, 52);
+}
+
+.level_grid {
+  text-align: center;
+  padding: 3rem;
+}
+
+.level_grid > div {
+  display: inline-block;
+  vertical-align: top;
+  box-sizing: border-box;
+  width: calc(12.5% - 1rem); 
+  margin: 2rem;
+  padding: 1rem;
+  background: rgba(6, 195, 34, 0.03);
+  border: 2px solid rgba(6, 195, 34, 0.08);
+  border-radius: 60px;
+  color: #44af0e;
+  cursor: pointer;
+  font-family: "Press Start 2P", monospace;
+}
+
+.level_grid > a:link, a:visited, a:active, a:hover {
+    color:#44af0e;
+}
+
+.level_grid > a {
+    text-decoration: none;
+}
+
+/*
+@media (max-width: 900px) {
+  .level_grid > div {
+    width: calc(50% - 1rem);
+  }
+}
+*/
+/* Responsive: one column on small screens */
+/*
+@media (max-width: 480px) {
+  .level_grid > div {
+    width: calc(100% - 1rem);
+  }
+}
+*/
