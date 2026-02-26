@@ -49,6 +49,7 @@ $(function () {
     createFakePlatform(210, 360, 90, 10, "rgb(75, 46, 205)")
     createPlatform(90, 230, 10, 10, "rgb(70, 43, 190)")
     createFakePlatform(20, 230, 70, 10, "rgb(75, 46, 205)")
+    createPlatform(550, 250, 10, 10, "rgb(70, 43, 190)")
 
     // TODO 3 - Create Collectables
     createCollectable("blueGem", 20, 20)

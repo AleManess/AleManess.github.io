@@ -1,5 +1,5 @@
 body {
-    background: rgb(125, 198, 205);
+    background: linear-gradient(90deg, rgb(57, 1, 94), rgb(88, 4, 145), rgb(117, 4, 192));
     color: rgb(45, 45, 45);
     padding: 10px;
     font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif;
@@ -12,11 +12,12 @@ body {
 
 /* navigation menu */
 nav {
-    background: rgb(31, 74, 165);
+    background: rgb(10, 54, 149);
     margin: 0 auto;
     display: flex;
     padding: 10px;
     margin-bottom: 20px;
+    border-radius: 10px;
 }
 
 h1 {
@@ -46,10 +47,11 @@ a {
 
 /* main container area beneath menu */
 main {
-    background: rgb(18, 52, 97);
+    background: rgb(10, 54, 149);
     display: flex;
     margin-top: 20px;
-    color: rgb(233, 250, 252)
+    color: rgb(233, 250, 252);
+    border-radius: 10px;
 }
 
 .sidebar {
@@ -59,6 +61,7 @@ main {
 
 .sidebar-img {
     width: 200px;
+    border-radius: 10px;
 }
 
 .content {
@@ -68,9 +71,10 @@ main {
 
 /* interests section styles */
 #interests {
-    border: 4px darkorchid ridge;
+    /* border: 4px darkorchid ridge; */
     padding: 8px;
     margin-top: 20px;
+    border-radius: 10px;
 }
 
 h2, h3 {
@@ -79,7 +83,7 @@ h2, h3 {
 
 /* Portfolio styles */
 .content h1 {
-  color: black;
+  color: rgb(255, 255, 255);
 }
 
 #portfolio {
@@ -88,17 +92,21 @@ h2, h3 {
 }
 
 #portfolio li {
-  background: #fff;
+  background: #08535d;
   padding: 10px;
   border-radius: 10px;
   margin-bottom: 10px;
+  border-width: 5px;
+  border-color: hotpink;
 }
 
 #portfolio li:hover {
-  background: #eee;
+  background: #186b58;
+  transform: scale(1.1, 1.1);
+  transition: 0.3s ease-in;
 }
 
 #portfolio a {
   text-decoration: none;
-  color: #454545;
+  color: #ffffff;
 }
