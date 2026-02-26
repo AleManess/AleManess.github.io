@@ -31,10 +31,10 @@ body {
   height: calc(10%);
   margin: 20px;
   padding: 4px;
-  background: rgba(6, 195, 34, 0.03);
-  border: 2px solid rgba(6, 195, 34, 0.08);
+  background: linear-gradient(90deg, rgb(19, 189, 67), rgb(239, 0, 248));
+  border: 6px solid linear-gradient(90deg, rgb(239, 0, 248), rgb(19, 189, 67));
   border-radius: 60px;
-  color: #44af0e;
+  color: #260551;
   cursor: pointer;
   font-family: "Press Start 2P", monospace;
 }
@@ -45,13 +45,34 @@ body {
 }
 
 a:link, a:visited, a:active, a:hover {
-    color:#44af0e;
+    color:#260551;
     text-decoration: none;
 }
 
 .level_grid > a {
     text-decoration: none;
-    color: #44af0e,
+    color: #260551,
+}
+
+#Portfolio-button {
+  position: absolute;
+  left: 40%;
+  right: 40%;
+  font-family: 'Press Start 2P', monospace;
+  padding: 10px;
+  background-color: rgb(177, 156, 255);
+  border-width: 3px;
+  border-color: rgb(89, 23, 255);
+  color:  rgb(119, 65, 255);
+  border-radius: 10px;
+}
+
+#Portfolio-button:hover {
+  transform: scale(1.1, 1.1);
+  transition: 0.3s ease;
+  background-color: rgb(119, 65, 255);
+  border-color: rgb(177, 156, 255);
+  color: rgb(177, 156, 255);
 }
 
 /*
