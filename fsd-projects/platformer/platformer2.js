@@ -18,7 +18,7 @@ $(function () {
 
     // Create walls - do not delete or modify this code
     createPlatform(-50, -50, canvas.width + 100, 50); // top wall
-    createPlatform(-50, canvas.height - 10, canvas.width + 100, 200, "purple"); // bottom wall
+    createPlatform(-50, canvas.height - 10, canvas.width + 100, 200, "rgb(43, 107, 190)"); // bottom wall
     createPlatform(-50, -50, 50, canvas.height + 500); // left wall
     createPlatform(canvas.width, -50, 50, canvas.height + 100); // right wall
 
@@ -30,10 +30,29 @@ $(function () {
     toggleGrid()
 
     // TODO 2 - Create Platforms
-    createPlatform(100, 100, 30, 30, "rgb(161, 32, 82)");
+    createPlatform(300, 200, 10, 530, "rgb(70, 43, 190)")
+    createPlatform(200, 620, 10, 10, "rgb(70, 43, 190)")
+    createPlatform(90, 490, 10, 10, "rgb(70, 43, 190)")
+    createPlatform(200, 360, 10, 10, "rgb(70, 43, 190)")
+    createPlatform(0, 230, 20, 10, "rgb(70, 43, 190)")
+    createPlatform(310, 590, 120, 10, "rgb(70, 43, 190)")
+    createPlatform(430, 200, 10, 400, "rgb(70, 43, 190)")
+    createBadPlatform(310, 580, 120, 10, "rgb(43, 107, 190)")
+    createPlatform(400, 500, 30, 10, "rgb(70, 43, 190)")
+    createPlatform(310, 390, 10, 10, "rgb(70, 43, 190)")
+    createPlatform(420, 260, 10, 10, "rgb(70, 43, 190)")
+    createPlatform(100, 720, 100, 10,  "rgb(70, 43, 190)")
+    createBadPlatform(0, 730, 1400, 10, "rgb(43, 107, 190)")
+    createBadPlatform(440, 440, 600, 20, "rgb(43, 107, 190)")
+    createFakePlatform(0, 490, 90, 10, "rgb(75, 46, 205)")
+    createFakePlatform(210, 620, 90, 10, "rgb(75, 46, 205)")
+    createFakePlatform(210, 360, 90, 10, "rgb(75, 46, 205)")
+    createPlatform(90, 230, 10, 10, "rgb(70, 43, 190)")
+    createFakePlatform(20, 230, 70, 10, "rgb(75, 46, 205)")
 
     // TODO 3 - Create Collectables
-    
+    createCollectable("blueGem", 20, 20)
+    createCollectable("blueGem", 390, 460)
 
     
     // TODO 4 - Create Cannons
