@@ -681,7 +681,7 @@ function winGame() {
     canvas.width / 2,
     canvas.height / 2
   );
-  ctx.fillStyle = "white";
+  ctx.fillStyle = "rgb(243, 8, 211)";
   ctx.font = "400% 'Press Start 2P'";
   ctx.fillText(
     "YOU WIN!",

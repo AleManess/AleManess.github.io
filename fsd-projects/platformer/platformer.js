@@ -14,6 +14,7 @@ $(function () {
       firstTimeSetup = false;
       //start game
       setInterval(main, 1000 / frameRate);
+      document.getElementById('backToSelect').style.display = 'inline-block';
     }
 
     // Create walls - do not delete or modify this code

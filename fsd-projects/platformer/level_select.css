@@ -1,6 +1,8 @@
 body {
   background: radial-gradient(circle, rgb(18, 5, 50), rgb(45, 10, 132));
   overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 
 .tophead {
@@ -25,9 +27,9 @@ body {
   display: inline-block;
   vertical-align: top;
   box-sizing: border-box;
-  width: calc(12.5% - 1rem); 
-  margin: 2rem;
-  padding: 1rem;
+  width: calc(12.5% ); 
+  margin: 20px;
+  padding: 10px;
   background: rgba(6, 195, 34, 0.03);
   border: 2px solid rgba(6, 195, 34, 0.08);
   border-radius: 60px;
@@ -36,12 +38,19 @@ body {
   font-family: "Press Start 2P", monospace;
 }
 
+.level_grid > div:hover {
+  transform: scale(1.3, 1.3);
+  transition: 0.5s ease-in-out;
+}
+
 .level_grid > a:link, a:visited, a:active, a:hover {
     color:#44af0e;
+    text-decoration: none;
 }
 
 .level_grid > a {
     text-decoration: none;
+    color: #44af0e,
 }
 
 /*
