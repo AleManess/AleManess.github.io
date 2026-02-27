@@ -50,23 +50,27 @@ $(function () {
     createPlatform(90, 230, 10, 10, "rgb(70, 43, 190)")
     createFakePlatform(20, 230, 70, 10, "rgb(75, 46, 205)")
     createPlatform(550, 320, 23, 10, "rgb(70, 43, 190)")
-    createPlatform(700, 350, 23, 10, "rgb(70, 43, 190)")
-    createPlatform(850, 350, 23, 10, "rgb(70, 43, 190)")
-    createPlatform(1000, 350, 23, 10, "rgb(70, 43, 190)")
-    createPlatform(1150, 350, 23, 10, "rgb(70, 43, 190)")
-    createPlatform(1280, 240, 23, 10, "rgb(70, 43, 190)")
-    createPlatform(1100, 120, 23, 10, "rgb(70, 43, 190)")
-    createPlatform(970, 120, 23, 10, "rgb(70, 43, 190)")
-    createPlatform(840, 120, 23, 10, "rgb(70, 43, 190)")
+    createPlatform(700, 400, 23, 10, "rgb(70, 43, 190)")
+    createPlatform(850, 400, 23, 10, "rgb(70, 43, 190)")
+    createPlatform(1000, 400, 23, 10, "rgb(70, 43, 190)")
+    createPlatform(1150, 400, 23, 10, "rgb(70, 43, 190)")
+    createPlatform(1280, 290, 23, 10, "rgb(70, 43, 190)")
+    createPlatform(1100, 170, 23, 10, "rgb(70, 43, 190)")
+    createPlatform(970, 170, 23, 10, "rgb(70, 43, 190)")
+    createPlatform(840, 170, 23, 10, "rgb(70, 43, 190)")
     createPlatform(440, 460, 750, 10, "rgba(0, 0, 0, 0)")
+    createBadPlatform(1300, 440, 100, 20, "rgb(43, 107, 190)")
 
     // TODO 3 - Create Collectables
     createCollectable("blueGem", 20, 20)
     createCollectable("blueGem", 390, 460)
     createCollectable("blueGem", 760, 250, 0.3, 1)
+    createCollectable("blueGem", 830, 120)
+
 
     
     // TODO 4 - Create Cannons
+    createCannon("bottom", 500, 700, 50, 50, 580, 1300, 140)
     
     
     
