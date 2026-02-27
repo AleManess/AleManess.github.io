@@ -60,20 +60,20 @@ a:link, a:visited, a:active, a:hover {
   right: 40%;
   font-family: 'Press Start 2P', monospace;
   padding: 10px;
-  background-color: rgb(177, 156, 255);
+  background-color: rgb(60, 9, 245);
   border-width: 3px;
-  border-color: rgb(89, 23, 255);
-  color:  rgb(119, 65, 255);
+  border-color: rgb(18, 182, 53);
   border-radius: 10px;
 }
 
 #Portfolio-button:hover {
   transform: scale(1.1, 1.1);
   transition: 0.3s ease;
-  background-color: rgb(119, 65, 255);
-  border-color: rgb(177, 156, 255);
+  background-color: rgb(18, 182, 53);
+  border-color: rgb(60, 9, 245);
   color: rgb(177, 156, 255);
 }
+
 
 /*
 @media (max-width: 900px) {
