@@ -31,10 +31,10 @@ body {
   height: calc(10%);
   margin: 20px;
   padding: 4px;
-  background: linear-gradient(90deg, rgb(19, 189, 67), rgb(239, 0, 248));
-  border: 6px solid linear-gradient(90deg, rgb(239, 0, 248), rgb(19, 189, 67));
+  background: linear-gradient(90deg, rgb(19, 73, 189), rgb(161, 19, 208));
+  border: 6px solid linear-gradient(90deg, rgb(162, 22, 201), rgb(27, 68, 255));
   border-radius: 60px;
-  color: #260551;
+  color: rgb(18, 182, 53);
   cursor: pointer;
   font-family: "Press Start 2P", monospace;
 }
@@ -44,14 +44,15 @@ body {
   transition: 0.5s ease-in-out;
 }
 
-a:link, a:visited, a:active, a:hover {
-    color:#260551;
+a:link, a:visited, a:active, a:hover{
+    color:rgb(18, 182, 53);
     text-decoration: none;
 }
 
+
 .level_grid > a {
     text-decoration: none;
-    color: #260551,
+    color: rgb(18, 182, 53),
 }
 
 #Portfolio-button {
@@ -64,6 +65,7 @@ a:link, a:visited, a:active, a:hover {
   border-width: 3px;
   border-color: rgb(18, 182, 53);
   border-radius: 10px;
+  color: rgb(18, 182, 53);
 }
 
 #Portfolio-button:hover {
@@ -71,7 +73,7 @@ a:link, a:visited, a:active, a:hover {
   transition: 0.3s ease;
   background-color: rgb(18, 182, 53);
   border-color: rgb(60, 9, 245);
-  color: rgb(177, 156, 255);
+  color: rgb(60, 9, 245);
 }
 
 
