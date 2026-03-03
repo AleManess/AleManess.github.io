@@ -1,14 +1,27 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Neon Slasher: Glitch Edition</title>
-    <link href="ai.css" rel="stylesheet" />
-  </head>
-  <body>
-    <button id="restartBtn">REBOOT SYSTEM</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Slasher</title>
+    <link rel="stylesheet" href="ai.css">
+</head>
+<body>
+    <div id="menu">
+        <h1>NEON SLASHER</h1>
+        <div class="button-container">
+            <button onclick="startGame('NORMAL')">NORMAL MODE</button>
+            <button onclick="startGame('ZEN')">ZEN MODE</button>
+        </div>
+        <p>Select your system protocol</p>
+    </div>
+
+    <div id="ui-container">
+        <button id="restartBtn">REBOOT SYSTEM</button>
+        <button id="menuBtn">EXIT TO TERMINAL</button>
+    </div>
     <canvas id="gameCanvas"></canvas>
+
     <script src="ai.js"></script>
-  </body>
+</body>
 </html>
