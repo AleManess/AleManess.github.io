@@ -20,6 +20,7 @@ let glitchFrames = 0;
 let frenzyFrames = 0;
 let critFlashFrames = 0;
 let levelUpFrames = 0;
+let shakeFrames = 0; // Screen shake effect
 let currentLevel = 1;
 let megaBombSpawnedThisLevel = false;
 
@@ -79,7 +80,8 @@ function startGame(mode) {
 function resetGame() {
     score = 0; lives = 3; timeLeft = 60;
     difficultyMultiplier = 1; slowMoFrames = 0; glitchFrames = 0;
-    frenzyFrames = 0; critFlashFrames = 0; levelUpFrames = 0; currentLevel = 1; 
+    frenzyFrames = 0; critFlashFrames = 0; levelUpFrames = 0; 
+    shakeFrames = 0; currentLevel = 1; 
     comboCount = 0; megaBombSpawnedThisLevel = false;
     gameOver = false; fruits = []; trail = []; labels = []; burstParticles = [];
     uiContainer.style.display = 'none';
@@ -116,7 +118,7 @@ class GameObject {
     constructor(type = "fruit") {
         this.type = type;
         this.hitsNeeded = (type === "megabomb") ? 3 : 1;
-        this.size = (type === "megabomb") ? 110 : (type === "frenzy" ? 22 : (type === "bomb" ? 24 : 35 + Math.random() * 15));
+        this.size = (type === "megabomb") ? 110 : (type === "frenzy" || type === "slowmo" ? 25 : (type === "bomb" ? 24 : 35 + Math.random() * 15));
         this.x = Math.random() * (canvas.width - this.size * 2) + this.size;
         this.y = canvas.height + this.size;
         
@@ -161,6 +163,12 @@ class GameObject {
             ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size);
             ctx.fillStyle = "white"; ctx.font = "bold 45px Courier New";
             ctx.textAlign = "center"; ctx.fillText(this.hitsNeeded, 0, 15);
+        } else if (this.type === "slowmo") {
+            // Slowmo is back to a SQUARE
+            ctx.strokeStyle = this.color;
+            ctx.strokeRect(-this.size/2, -this.size/2, this.size, this.size);
+            ctx.fillStyle = 'rgba(0, 242, 255, 0.4)';
+            ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size);
         } else if (this.type === "frenzy") {
             ctx.strokeStyle = this.color; ctx.beginPath();
             ctx.moveTo(0, -this.size); ctx.lineTo(this.size, this.size); ctx.lineTo(-this.size, this.size); ctx.closePath();
@@ -236,7 +244,16 @@ function animate() {
     }
 
     ctx.save();
-    if (glitchFrames > 0) { glitchFrames--; ctx.translate((Math.random() - 0.5) * 20, (Math.random() - 0.5) * 20); }
+    
+    // Screen Shake Logic
+    if (shakeFrames > 0) {
+        ctx.translate((Math.random() - 0.5) * 15, (Math.random() - 0.5) * 15);
+        shakeFrames--;
+    }
+    if (glitchFrames > 0) { 
+        glitchFrames--; 
+        ctx.translate((Math.random() - 0.5) * 20, (Math.random() - 0.5) * 20); 
+    }
 
     difficultyMultiplier = (gameState === 'ZEN') ? 1 + (score / 2200) : 1 + (score / 1800);
     ctx.drawImage(bgCanvas, 0, 0);
@@ -244,9 +261,14 @@ function animate() {
     let levelIdx = (currentLevel - 1) % levelColors.length;
     let baseColor = levelColors[levelIdx];
 
-    if (critFlashFrames > 0) { ctx.fillStyle = `rgba(255, 255, 255, ${critFlashFrames/10})`; critFlashFrames--; }
-    else if (frenzyFrames > 0) { ctx.fillStyle = `rgba(254, 238, 16, ${Math.sin(Date.now()/50)>0?0.2:0.05})`; }
-    else { ctx.fillStyle = baseColor + "12"; }
+    if (critFlashFrames > 0) { 
+        ctx.fillStyle = `rgba(255, 255, 255, ${critFlashFrames/10})`; 
+        critFlashFrames--; 
+    } else if (frenzyFrames > 0) { 
+        ctx.fillStyle = `rgba(254, 238, 16, ${Math.sin(Date.now()/50)>0?0.2:0.05})`; 
+    } else { 
+        ctx.fillStyle = baseColor + "12"; 
+    }
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ambientParticles.forEach(p => {
@@ -304,6 +326,8 @@ function animate() {
                 if (f.hitsNeeded <= 0) {
                     score += 100; createSplash(f.x, f.y, "#ffffff");
                     triggerDefragmentation(f.x, f.y);
+                    shakeFrames = 15; // Hit the disarm hard
+                    critFlashFrames = 12;
                     labels.push(new Label(f.x, f.y, "CORE DEFRAGMENTED +100", "#00ff9f", 28));
                     fruits.splice(i, 1);
                 }
@@ -315,22 +339,14 @@ function animate() {
                 createSplash(f.x, f.y, f.color);
                 lastSliceTime = Date.now();
                 comboCount++;
-                
-                // --- BALANCED COMBO MATH ---
                 let basePoints = 10;
-                let comboBonus = 0;
-                if (comboCount > 2) {
-                    comboBonus = (comboCount > 5) ? 2 : 1; // Small flat bonuses
-                }
-                
+                let comboBonus = (comboCount > 2) ? (comboCount > 5 ? 2 : 1) : 0;
                 if (Math.random() < 0.03) { 
-                    basePoints *= 2; // Critical reduced from 3x to 2x
+                    basePoints *= 2; 
                     critFlashFrames = 10; 
                     labels.push(new Label(f.x, f.y, "SYNC", "#ffffff", 28)); 
                 }
-
                 score += (basePoints + comboBonus);
-
                 let h1 = new GameObject("fruit"); Object.assign(h1, {x: f.x, y: f.y, size: f.size, color: f.color, speedX: f.speedX-4, speedY: f.speedY, isHalf: true, side: -1});
                 let h2 = new GameObject("fruit"); Object.assign(h2, {x: f.x, y: f.y, size: f.size, color: f.color, speedX: f.speedX+4, speedY: f.speedY, isHalf: true, side: 1});
                 fruits.push(h1, h2); fruits.splice(i, 1);
