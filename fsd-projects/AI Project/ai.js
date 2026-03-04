@@ -19,7 +19,9 @@ let slowMoFrames = 0;
 let glitchFrames = 0;
 let frenzyFrames = 0;
 let critFlashFrames = 0;
+let levelUpFrames = 0;
 let currentLevel = 1;
+let megaBombSpawnedThisLevel = false;
 
 let comboCount = 0;
 let lastSliceTime = 0;
@@ -36,10 +38,10 @@ let fruits = [];
 let trail = [];
 let labels = [];
 let ambientParticles = [];
+let burstParticles = [];
 let mouse = { x: 0, y: 0, isDown: false };
 let lastTime = Date.now();
 
-// --- INITIALIZATION ---
 function resize() {
     canvas.width = bgCanvas.width = window.innerWidth;
     canvas.height = bgCanvas.height = window.innerHeight;
@@ -48,19 +50,19 @@ function resize() {
 }
 
 function clearSplashes() {
-    bgCtx.fillStyle = '#050505';
+    bgCtx.fillStyle = '#000';
     bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
 }
 
 function initAmbient() {
     ambientParticles = [];
-    for(let i = 0; i < 40; i++) {
+    for(let i = 0; i < 65; i++) {
         ambientParticles.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            vx: (Math.random() - 0.5) * 0.5,
-            vy: (Math.random() - 0.5) * 0.5,
-            size: Math.random() * 2 + 1
+            vy: Math.random() * 2.5 + 0.5,
+            length: Math.random() * 25 + 10,
+            opacity: Math.random() * 0.5 + 0.1
         });
     }
 }
@@ -77,8 +79,9 @@ function startGame(mode) {
 function resetGame() {
     score = 0; lives = 3; timeLeft = 60;
     difficultyMultiplier = 1; slowMoFrames = 0; glitchFrames = 0;
-    frenzyFrames = 0; critFlashFrames = 0; currentLevel = 1; comboCount = 0;
-    gameOver = false; fruits = []; trail = []; labels = [];
+    frenzyFrames = 0; critFlashFrames = 0; levelUpFrames = 0; currentLevel = 1; 
+    comboCount = 0; megaBombSpawnedThisLevel = false;
+    gameOver = false; fruits = []; trail = []; labels = []; burstParticles = [];
     uiContainer.style.display = 'none';
     clearSplashes();
     lastTime = Date.now();
@@ -93,17 +96,16 @@ menuBtn.addEventListener('click', () => {
     clearSplashes();
 });
 
-// --- CLASSES ---
 class Label {
     constructor(x, y, text, color, size = 22) {
         this.x = x; this.y = y; this.text = text; this.color = color;
-        this.alpha = 1.0; this.life = 40; this.size = size;
+        this.alpha = 1.0; this.life = 45; this.size = size;
     }
-    update() { this.y -= 1.5; this.alpha -= 0.025; this.life--; }
+    update() { this.y -= 1.8; this.alpha -= 0.02; this.life--; }
     draw() {
         ctx.save();
         ctx.globalAlpha = Math.max(0, this.alpha);
-        ctx.shadowBlur = 15; ctx.shadowColor = this.color;
+        ctx.shadowBlur = 20; ctx.shadowColor = this.color;
         ctx.fillStyle = "white"; ctx.font = `bold ${this.size}px Courier New`;
         ctx.textAlign = "center"; ctx.fillText(this.text, this.x, this.y);
         ctx.restore();
@@ -113,22 +115,28 @@ class Label {
 class GameObject {
     constructor(type = "fruit") {
         this.type = type;
-        this.size = (type === "frenzy") ? 18 : (type === "bomb" ? 22 : 30 + Math.random() * 20);
+        this.hitsNeeded = (type === "megabomb") ? 3 : 1;
+        this.size = (type === "megabomb") ? 110 : (type === "frenzy" ? 22 : (type === "bomb" ? 24 : 35 + Math.random() * 15));
         this.x = Math.random() * (canvas.width - this.size * 2) + this.size;
         this.y = canvas.height + this.size;
         
-        const neonColors = ['#00ff9f', '#ff0055', '#bc13fe', '#feee10'];
-        if (this.type === "bomb") this.color = '#ff0000';
+        const neonColors = ['#00f2ff', '#00ff9f', '#ff0055', '#bc13fe', '#feee10'];
+        if (this.type === "bomb" || this.type === "megabomb") this.color = '#ff3131';
         else if (this.type === "slowmo") this.color = '#00f2ff';
         else if (this.type === "frenzy") this.color = '#feee10';
         else this.color = neonColors[Math.floor(Math.random() * neonColors.length)];
         
-        let boost = (this.type === "frenzy") ? 1.3 : 1;
-        this.speedY = (-11 - Math.random() * 7) * difficultyMultiplier * boost; 
-        this.speedX = (this.x < canvas.width / 2 ? 1 : -1) * (Math.random() * 4) * difficultyMultiplier;
-        this.gravity = 0.22 * difficultyMultiplier;
+        if (this.type === "megabomb") {
+            this.speedY = -12 - Math.random() * 3; 
+            this.speedX = (this.x < canvas.width / 2 ? 0.3 : -0.3);
+            this.gravity = 0.06; 
+        } else {
+            this.speedY = (-10 - Math.random() * 6) * difficultyMultiplier; 
+            this.speedX = (this.x < canvas.width / 2 ? 1 : -1) * (Math.random() * 3) * difficultyMultiplier;
+            this.gravity = 0.20 * difficultyMultiplier;
+        }
         this.isHalf = false; this.side = 0; this.rotation = 0;
-        this.rotSpeed = (Math.random() - 0.5) * 0.25;
+        this.rotSpeed = (this.type === "megabomb") ? 0.015 : (Math.random() - 0.5) * 0.2;
     }
     update() {
         let speedFactor = (slowMoFrames > 0) ? 0.35 : 1;
@@ -140,40 +148,62 @@ class GameObject {
     draw() {
         ctx.save();
         ctx.translate(this.x, this.y); ctx.rotate(this.rotation);
-        ctx.shadowBlur = 15; ctx.shadowColor = this.color; ctx.lineWidth = 3;
+        ctx.shadowBlur = (this.type === "megabomb") ? 80 : 30; 
+        ctx.shadowColor = this.color; 
+        ctx.lineWidth = (this.type === "megabomb") ? 12 : 5; 
         
-        if (this.type === "frenzy") {
+        if (this.type === "megabomb") {
+            let pulse = 1 + Math.sin(Date.now() / 150) * 0.05;
+            ctx.scale(pulse, pulse);
+            ctx.strokeStyle = this.color;
+            ctx.strokeRect(-this.size/2, -this.size/2, this.size, this.size);
+            ctx.fillStyle = `rgba(255, 49, 49, ${0.15 + Math.random() * 0.15})`;
+            ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size);
+            ctx.fillStyle = "white"; ctx.font = "bold 45px Courier New";
+            ctx.textAlign = "center"; ctx.fillText(this.hitsNeeded, 0, 15);
+        } else if (this.type === "frenzy") {
             ctx.strokeStyle = this.color; ctx.beginPath();
             ctx.moveTo(0, -this.size); ctx.lineTo(this.size, this.size); ctx.lineTo(-this.size, this.size); ctx.closePath();
-            ctx.stroke(); ctx.fillStyle = 'rgba(254, 238, 16, 0.2)'; ctx.fill();
+            ctx.stroke(); ctx.fillStyle = 'rgba(254, 238, 16, 0.4)'; ctx.fill();
         } else if (this.type === "bomb") {
             ctx.beginPath(); ctx.arc(0, 0, this.size, 0, Math.PI * 2);
-            ctx.strokeStyle = '#ff0000'; ctx.stroke();
-            ctx.fillStyle = 'rgba(255, 0, 0, 0.2)'; ctx.fill();
-        } else if (this.type === "slowmo") {
-            ctx.strokeStyle = '#00f2ff'; ctx.strokeRect(-this.size/2, -this.size/2, this.size, this.size);
-            ctx.fillStyle = 'rgba(0, 242, 255, 0.2)'; ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size);
+            ctx.strokeStyle = '#ff3131'; ctx.stroke();
+            ctx.fillStyle = 'rgba(255, 49, 49, 0.3)'; ctx.fill();
         } else {
             ctx.strokeStyle = this.color; ctx.beginPath();
             if (!this.isHalf) { ctx.arc(0, 0, this.size, 0, Math.PI * 2); }
             else { ctx.arc(0, 0, this.size, Math.PI * 0.5, Math.PI * 1.5, this.side > 0); ctx.closePath(); }
             ctx.stroke();
+            ctx.globalAlpha = 0.3; ctx.fillStyle = this.color; ctx.fill();
         }
         ctx.restore();
     }
 }
 
+function triggerDefragmentation(x, y) {
+    const neonColors = ['#00f2ff', '#00ff9f', '#ff0055', '#bc13fe', '#feee10'];
+    for(let i = 0; i < 40; i++) {
+        burstParticles.push({
+            x: x, y: y,
+            vx: (Math.random() - 0.5) * 15,
+            vy: (Math.random() - 0.5) * 15,
+            size: Math.random() * 8 + 4,
+            color: neonColors[Math.floor(Math.random() * neonColors.length)],
+            life: 1.0
+        });
+    }
+}
+
 function createSplash(x, y, color) {
-    bgCtx.save(); bgCtx.shadowBlur = 25; bgCtx.shadowColor = color; bgCtx.fillStyle = color;
-    bgCtx.globalAlpha = 0.3; bgCtx.beginPath();
+    bgCtx.save(); bgCtx.shadowBlur = 35; bgCtx.shadowColor = color; bgCtx.fillStyle = color;
+    bgCtx.globalAlpha = 0.45; bgCtx.beginPath();
     for (let i = 0; i < 6; i++) {
-        const angle = (Math.PI * 2 / 6) * i; const dist = 15 + Math.random() * 35;
+        const angle = (Math.PI * 2 / 6) * i; const dist = 15 + Math.random() * 50;
         bgCtx.lineTo(x + Math.cos(angle) * dist, y + Math.sin(angle) * dist);
     }
     bgCtx.fill(); bgCtx.restore();
 }
 
-// --- MAIN LOOP ---
 function animate() {
     if (gameState === 'MENU') return;
 
@@ -182,7 +212,7 @@ function animate() {
             highScores[gameState] = score;
             localStorage.setItem('neonSlasher_' + gameState, score);
         }
-        ctx.fillStyle = 'rgba(0,0,0,0.85)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'rgba(0,0,0,0.95)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = '#00f2ff'; ctx.textAlign = 'center'; ctx.font = 'bold 50px Courier New';
         ctx.fillText('DATA UPLOAD COMPLETE', canvas.width/2, canvas.height/2 - 100);
         ctx.font = '30px Courier New'; ctx.fillText('FINAL SCORE: ' + score, canvas.width/2, canvas.height/2 - 30);
@@ -191,12 +221,13 @@ function animate() {
         return;
     }
 
-    if (Date.now() - lastSliceTime > comboTimeout) { comboCount = 0; }
-
     let newLevel = Math.floor(score / 500) + 1;
     if (newLevel > currentLevel) {
         currentLevel = newLevel;
-        labels.push(new Label(canvas.width/2, canvas.height/2, "LEVEL UP: " + currentLevel, "#ffffff", 40));
+        levelUpFrames = 40;
+        glitchFrames = 15;
+        megaBombSpawnedThisLevel = false;
+        labels.push(new Label(canvas.width/2, canvas.height/2, "SYSTEM REBOOT: L" + currentLevel, "#ffffff", 45));
     }
 
     if (gameState === 'ZEN') {
@@ -207,51 +238,48 @@ function animate() {
     ctx.save();
     if (glitchFrames > 0) { glitchFrames--; ctx.translate((Math.random() - 0.5) * 20, (Math.random() - 0.5) * 20); }
 
-    difficultyMultiplier = (gameState === 'ZEN') ? 1 + (score / 2000) : 1 + (score / 1500);
+    difficultyMultiplier = (gameState === 'ZEN') ? 1 + (score / 2200) : 1 + (score / 1800);
     ctx.drawImage(bgCanvas, 0, 0);
 
     let levelIdx = (currentLevel - 1) % levelColors.length;
     let baseColor = levelColors[levelIdx];
 
-    // Background Effects
-    if (critFlashFrames > 0) {
-        ctx.fillStyle = `rgba(255, 255, 255, ${critFlashFrames / 10})`;
-        critFlashFrames--;
-    } else if (frenzyFrames > 0) {
-        let flash = Math.sin(Date.now() / 50) > 0 ? 0.15 : 0.05;
-        ctx.fillStyle = `rgba(254, 238, 16, ${flash})`;
-    } else if (slowMoFrames > 0) {
-        ctx.fillStyle = 'rgba(0, 40, 80, 0.3)';
-    } else {
-        ctx.fillStyle = baseColor + "15";
-    }
+    if (critFlashFrames > 0) { ctx.fillStyle = `rgba(255, 255, 255, ${critFlashFrames/10})`; critFlashFrames--; }
+    else if (frenzyFrames > 0) { ctx.fillStyle = `rgba(254, 238, 16, ${Math.sin(Date.now()/50)>0?0.2:0.05})`; }
+    else { ctx.fillStyle = baseColor + "12"; }
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Draw Ambient Particles
-    ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
     ambientParticles.forEach(p => {
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0) p.x = canvas.width;
-        if (p.x > canvas.width) p.x = 0;
-        if (p.y < 0) p.y = canvas.height;
-        if (p.y > canvas.height) p.y = 0;
-        ctx.fillRect(p.x, p.y, p.size, p.size);
+        p.y += p.vy;
+        if (p.y > canvas.height) { p.y = -p.length; p.x = Math.random() * canvas.width; }
+        ctx.strokeStyle = "rgba(255, 255, 255, " + p.opacity + ")";
+        ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x, p.y + p.length); ctx.stroke();
     });
+
+    for (let i = burstParticles.length - 1; i >= 0; i--) {
+        let p = burstParticles[i];
+        p.x += p.vx; p.y += p.vy; p.life -= 0.02;
+        ctx.fillStyle = p.color; ctx.globalAlpha = p.life;
+        ctx.fillRect(p.x, p.y, p.size, p.size);
+        if (p.life <= 0) burstParticles.splice(i, 1);
+    }
+    ctx.globalAlpha = 1.0;
 
     if (slowMoFrames > 0) slowMoFrames--;
     if (frenzyFrames > 0) frenzyFrames--;
 
-    let spawnRate = (frenzyFrames > 0) ? 0.22 : (0.035 + (score / 15000));
+    let spawnRate = (frenzyFrames > 0) ? 0.22 : (0.04 + (score / 16000));
     if (Math.random() < spawnRate) {
-        let rand = Math.random();
         let type = "fruit";
         if (frenzyFrames > 0) type = "fruit";
-        else if (gameState === 'NORMAL') {
-            if (rand < 0.14) type = "bomb";
-            else if (rand < 0.17) type = "slowmo";
-            else if (rand < 0.19) type = "frenzy";
-        } else if (gameState === 'ZEN') {
-            if (rand < 0.05) type = "slowmo";
+        else {
+            let rand = Math.random();
+            if (score > 300 && !megaBombSpawnedThisLevel && rand < 0.02) { 
+                type = "megabomb"; megaBombSpawnedThisLevel = true; 
+            }
+            else if (rand < 0.12) type = "bomb";
+            else if (rand < 0.15) type = "slowmo";
+            else if (rand < 0.17) type = "frenzy";
         }
         fruits.push(new GameObject(type));
     }
@@ -259,87 +287,88 @@ function animate() {
     if (mouse.isDown) { trail.push({ x: mouse.x, y: mouse.y }); if (trail.length > 15) trail.shift(); }
     else { if (trail.length > 0) trail.shift(); }
 
+    if (Date.now() - lastSliceTime > comboTimeout) { comboCount = 0; }
+
     for (let i = fruits.length - 1; i >= 0; i--) {
         const f = fruits[i]; f.update(); f.draw();
         const dist = Math.hypot(mouse.x - f.x, mouse.y - f.y);
         
         if (mouse.isDown && dist < f.size && !f.isHalf) {
             if (f.type === "bomb") {
-                lives--; score = Math.max(0, score - 50); glitchFrames = 15; comboCount = 0;
-                labels.push(new Label(f.x, f.y, "!!! BOOM !!!", "#ff0000"));
+                lives--; score = Math.max(0, score - 50); glitchFrames = 20; comboCount = 0;
+                labels.push(new Label(f.x, f.y, "CRITICAL ERROR", "#ff3131", 30));
                 fruits.splice(i, 1); if (lives <= 0) gameOver = true;
+            } else if (f.type === "megabomb") {
+                f.hitsNeeded--;
+                mouse.isDown = false; 
+                if (f.hitsNeeded <= 0) {
+                    score += 100; createSplash(f.x, f.y, "#ffffff");
+                    triggerDefragmentation(f.x, f.y);
+                    labels.push(new Label(f.x, f.y, "CORE DEFRAGMENTED +100", "#00ff9f", 28));
+                    fruits.splice(i, 1);
+                }
             } else if (f.type === "slowmo") {
-                slowMoFrames = 200; labels.push(new Label(f.x, f.y, "CHRONO", "#00f2ff")); fruits.splice(i, 1);
+                slowMoFrames = 200; labels.push(new Label(f.x, f.y, "TIME_WARP.exe", "#00f2ff")); fruits.splice(i, 1);
             } else if (f.type === "frenzy") {
-                frenzyFrames = 300; labels.push(new Label(f.x, f.y, "GOLDEN FRENZY", "#feee10")); fruits.splice(i, 1);
+                frenzyFrames = 300; labels.push(new Label(f.x, f.y, "OVERCLOCK_MODE", "#feee10")); fruits.splice(i, 1);
             } else {
                 createSplash(f.x, f.y, f.color);
                 lastSliceTime = Date.now();
                 comboCount++;
                 
-                let points = 10;
-                if (Math.random() < 0.1) {
-                    points *= 2;
-                    critFlashFrames = 8;
-                    labels.push(new Label(f.x, f.y, "CRITICAL!!", "#ffffff", 30));
-                }
-
-                if (comboCount >= 3) {
-                    points += (comboCount * 2);
-                    labels.push(new Label(f.x, f.y, `x${comboCount}`, "#ffffff", 24));
-                } else if (critFlashFrames <= 0) {
-                    labels.push(new Label(f.x, f.y, "SLICE!", f.color));
+                // --- BALANCED COMBO MATH ---
+                let basePoints = 10;
+                let comboBonus = 0;
+                if (comboCount > 2) {
+                    comboBonus = (comboCount > 5) ? 2 : 1; // Small flat bonuses
                 }
                 
-                score += points;
+                if (Math.random() < 0.03) { 
+                    basePoints *= 2; // Critical reduced from 3x to 2x
+                    critFlashFrames = 10; 
+                    labels.push(new Label(f.x, f.y, "SYNC", "#ffffff", 28)); 
+                }
+
+                score += (basePoints + comboBonus);
 
                 let h1 = new GameObject("fruit"); Object.assign(h1, {x: f.x, y: f.y, size: f.size, color: f.color, speedX: f.speedX-4, speedY: f.speedY, isHalf: true, side: -1});
                 let h2 = new GameObject("fruit"); Object.assign(h2, {x: f.x, y: f.y, size: f.size, color: f.color, speedX: f.speedX+4, speedY: f.speedY, isHalf: true, side: 1});
                 fruits.push(h1, h2); fruits.splice(i, 1);
             }
-        } else if (f.y > canvas.height + 100) fruits.splice(i, 1);
-    }
-
-    for (let i = labels.length - 1; i >= 0; i--) {
-        labels[i].update(); labels[i].draw(); if (labels[i].life <= 0) labels.splice(i, 1);
-    }
-
-    if (trail.length >= 2) {
-        ctx.shadowBlur = 15; ctx.shadowColor = (frenzyFrames > 0) ? '#feee10' : baseColor;
-        ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 5; ctx.lineCap = 'round';
-        ctx.beginPath();
-        for (let i = 0; i < trail.length - 1; i++) {
-            ctx.globalAlpha = i / trail.length;
-            ctx.moveTo(trail[i].x, trail[i].y);
-            ctx.lineTo(trail[i+1].x, trail[i+1].y);
-            ctx.stroke();
+        } else if (f.y > canvas.height + 200) {
+            if (f.type === "megabomb" && !f.isHalf) { 
+                lives--; glitchFrames = 30; 
+                labels.push(new Label(canvas.width/2, 100, "SYSTEM BREACH", "#ff3131", 35));
+                if (lives <= 0) gameOver = true;
+            }
+            fruits.splice(i, 1);
         }
     }
-    ctx.restore();
+
+    if (levelUpFrames > 0) {
+        ctx.fillStyle = "rgba(0, 242, 255, 0.1)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        for(let i=0; i<20; i++) {
+            ctx.fillStyle = "#00f2ff"; ctx.fillText(String.fromCharCode(0x30A0 + Math.random() * 96), Math.random()*canvas.width, Math.random()*canvas.height);
+        }
+        levelUpFrames--;
+    }
+
+    for (let i = labels.length - 1; i >= 0; i--) { labels[i].update(); labels[i].draw(); if (labels[i].life <= 0) labels.splice(i, 1); }
+
+    if (trail.length >= 2) {
+        ctx.shadowBlur = 25; ctx.shadowColor = (frenzyFrames > 0) ? '#feee10' : baseColor;
+        ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.beginPath();
+        for (let i = 0; i < trail.length - 1; i++) { ctx.globalAlpha = i / trail.length; ctx.moveTo(trail[i].x, trail[i].y); ctx.lineTo(trail[i+1].x, trail[i+1].y); ctx.stroke(); }
+    }
     
-    // UI
+    ctx.restore();
     ctx.textAlign = 'left'; ctx.fillStyle = baseColor; ctx.font = 'bold 28px Courier New';
     ctx.fillText('> L' + currentLevel + ' ' + gameState, 30, 50);
     ctx.fillText('> SCORE: ' + score, 30, 90);
-    
-    if (comboCount >= 2) {
-        ctx.fillStyle = '#ffffff';
-        ctx.fillText(`> COMBO: x${comboCount}`, 30, 130);
-    }
-
-    if (frenzyFrames > 0) {
-        ctx.textAlign = 'center'; ctx.fillStyle = '#feee10';
-        ctx.fillText('!! FRENZY PROTOCOL !!', canvas.width/2, 50);
-    }
-
+    if (comboCount >= 2) { ctx.fillStyle = '#ffffff'; ctx.fillText(`> COMBO: x${comboCount}`, 30, 130); }
     ctx.textAlign = 'right';
-    if (gameState === 'ZEN') {
-        ctx.fillStyle = (timeLeft <= 10) ? '#ff0055' : '#00ff9f';
-        ctx.fillText('TIME: ' + timeLeft + 's', canvas.width - 30, 50);
-    } else {
-        ctx.fillStyle = '#ff0055';
-        ctx.fillText('STRIKES: ' + 'X'.repeat(3-lives) + '_'.repeat(lives), canvas.width - 30, 50);
-    }
+    if (gameState === 'ZEN') { ctx.fillStyle = (timeLeft <= 10) ? '#ff0055' : '#00ff9f'; ctx.fillText('TIME: ' + timeLeft + 's', canvas.width - 30, 50); }
+    else { ctx.fillStyle = '#ff0055'; ctx.fillText('HEALTH: ' + 'X'.repeat(3-lives) + '_'.repeat(lives), canvas.width - 30, 50); }
 
     requestAnimationFrame(animate);
 }
