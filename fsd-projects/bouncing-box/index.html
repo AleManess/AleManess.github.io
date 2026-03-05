@@ -109,9 +109,6 @@
         var color1 
         var color2 
         var color3 
-        var antiColor1 = 255 - color1
-        var antiColor2 = 255 - color2
-        var antiColor3 = 255 - color3
         var colorStr = "rgb("+ color1 +", " + color2 + ", " + color3 + ")";
         
 
@@ -155,8 +152,8 @@
          * - move the box to the left side of the screen.
          */
         function handleBoxClick() {
-          positionX = Math.random() * 600
-          positionY = Math.random() * 400
+          positionX = Math.random() * (boardWidth - 100)
+          positionY = Math.random() * (boardHeight - 100)
           color1 = Math.random() * 255
           color2 = Math.random() * 255
           color3 = Math.random() * 255
