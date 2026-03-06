@@ -74,7 +74,7 @@
         });
 
         // Every 50 milliseconds, call the update Function (see below)
-        setInterval(update, 50);
+        setInterval(update, 5);
 
         // Every time the box is clicked, call the handleBoxClick Function (see below)
         box.on("click", handleBoxClick);
@@ -111,15 +111,16 @@
         var positionX = 0
         var points = 0
         var positionY = 0
-        var speedY = 10
-        var speed = 10
+        var speedY = .1
+        var speed = .1
         var coinFlipX
         var coinFlipY
         var color1 
         var color2 
         var color3 
         var colorStr = "rgb("+ color1 +", " + color2 + ", " + color3 + ")";
-        
+        var speedModifier
+        var speedYModifier
 
 
 
@@ -171,8 +172,10 @@
           box.css("background-color", colorStr)
           changeBoxText(points)
           points += 1
-          speed = 3 * points + 10
-          speedY = 3 * points + 10
+          speedModifier = ((Math.random() * 0.3) + 0.3)
+          speedYModifier = ((Math.random() * 0.3) + 0.4)
+          speed = speedModifier * points + 1
+          speedY = speedYModifier * points + 1
           coinFlipX = Math.random()
           if (coinFlipX > 0.5){
             speed *= -1
