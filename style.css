@@ -55,7 +55,7 @@ main {
   background: rgb(10, 54, 149);
   display: flex;
   width: 800px;
-  height: 280px;
+  height: 290px;
   margin-top: 40px;
   padding: 10px;
   color: rgb(0, 255, 64);
@@ -94,7 +94,7 @@ h3 {
 
 /* Portfolio styles */
 .content h1 {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 255, 64);
 }
 
 #portfolio {
@@ -107,8 +107,7 @@ h3 {
   padding: 10px;
   border-radius: 10px;
   margin-bottom: 10px;
-  border-width: 5px;
-  border-color: hotpink;
+  border: 1px solid rgba(0, 255, 64, 0.5)
 }
 
 #portfolio li:hover {
@@ -119,5 +118,5 @@ h3 {
 
 #portfolio a {
   text-decoration: none;
-  color: #ffffff;
+  color: rgb(0, 255, 64);
 }
