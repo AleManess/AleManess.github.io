@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Image Slideshow</title>
+  </head>
+  <body>
+    <nav>
+        <h1>Alexander's Amazing Website</h1>
+        <ul id="nav-ul">
+            <li class="nav-li">
+                <a href="index.html">Home</a>
+            </li>
+            <li class="nav-li">
+                <a href="portfolio.html">Portfolio</a>
+            </li>
+            <li class="nav-li">
+                <a href="images.html">Images</a>
+            </li>
+        </ul>
+      </nav>
+    <main class="slideshow-page">
+      <section class="slide-container">
+        <h1>My Images :)</h1>
+
+        <div id="slideshow" class="slideshow">
+          <div class="slide" >
+            <img src="Images/Ant'sView.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/PrettyFlowers.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/Grass2.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/RoundTree.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/BigTree.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/MajesticMilk.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/GoofyStar.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/BirdOnRoof.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/RedFlowerBush.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/2BirdOnFence.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/BenchTexture.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/67Brick.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/SideOfSchool.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/BellTower.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/GoldenLion.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/MuricanFlag.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/FlagUnderArch.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/ExitSign.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/Banana&Trophy.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/CrawfishThingy.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/Grass.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/DaxFirstDayOfSchool.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/ProfilePicGoneWrong.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/TrentAura.JPG" />
+          </div>
+          <div class="slide" >
+            <img src="Images/Dax&TrentHug.JPG" />
+          </div>
+        </div>
+
+        <div class="controls">
+          <button id="prev" aria-label="Previous slide">Back</button>
+          <span id="caption" class="caption">Boiled Daxton</span>
+          <button id="next" aria-label="Next slide">Next</button>
+        </div>
+
+        <div class="dots" id="dots"></div>
+      </section>
+    </main>
+
+    <script>
+      const slides = document.querySelectorAll(".slide");
+      const caption = document.getElementById("caption");
+      const dotsContainer = document.getElementById("dots");
+      let currentIndex = 0;
+      function showSlide(index) {
+        if (index < 0) index = slides.length - 1;
+        if (index >= slides.length) index = 0;
+        slides.forEach((slide, i) => {
+          slide.classList.toggle("active", i === index);
+          dotsContainer.children[i].classList.toggle("active", i === index);
+        });
+        caption.textContent = slides[index].dataset.caption || "";
+        currentIndex = index;
+      }
+
+      function buildDots() {
+        slides.forEach((_, i) => {
+          const dot = document.createElement("button");
+          dot.className = "dot";
+          dot.setAttribute("aria-label", `View slide ${i + 1}`);
+          dot.addEventListener("click", () => {
+            showSlide(i);
+            resetAutoPlay();
+          });
+          dotsContainer.appendChild(dot);
+        });
+      }
+
+      function nextSlide() {
+        showSlide(currentIndex + 1);
+      }
+
+      function prevSlide() {
+        showSlide(currentIndex - 1);
+      }
+
+      document.getElementById("next").addEventListener("click", () => {
+        nextSlide();
+      });
+
+      document.getElementById("prev").addEventListener("click", () => {
+        prevSlide();
+      });
+
+      buildDots();
+      showSlide(0);
+      resetAutoPlay();
+    </script>
+  </body>
+</html>
