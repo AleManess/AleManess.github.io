@@ -8,97 +8,97 @@
   </head>
   <body>
     <nav>
-        <h1>Alexander's Amazing Website</h1>
-        <ul id="nav-ul">
-            <li class="nav-li">
-                <a href="index.html">Home</a>
-            </li>
-            <li class="nav-li">
-                <a href="portfolio.html">Portfolio</a>
-            </li>
-            <li class="nav-li">
-                <a href="images.html">Images</a>
-            </li>
-        </ul>
-      </nav>
+      <h1>Alexander's Amazing Website</h1>
+      <ul id="nav-ul">
+        <li class="nav-li">
+          <a href="index.html">Home</a>
+        </li>
+        <li class="nav-li">
+          <a href="portfolio.html">Portfolio</a>
+        </li>
+        <li class="nav-li">
+          <a href="images.html">Images</a>
+        </li>
+      </ul>
+    </nav>
     <main class="slideshow-page">
       <section class="slide-container">
         <h1>My Images</h1>
 
         <div id="slideshow" class="slideshow">
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/Ant'sView.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/PrettyFlowers.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/Grass2.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/RoundTree.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/BigTree.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/MajesticMilk.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/GoofyStar.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/BirdOnRoof.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/RedFlowerBush.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/2BirdOnFence.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/BenchTexture.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/67Brick.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/SideOfSchool.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/BellTower.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/GoldenLion.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/MuricanFlag.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/FlagUnderArch.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/ExitSign.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/Banana&Trophy.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/CrawfishThingy.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/Grass.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/DaxFirstDayOfSchool.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/ProfilePicGoneWrong.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/TrentAura.JPG" />
           </div>
-          <div class="slide" >
+          <div class="slide">
             <img src="Images/Dax&TrentHug.JPG" />
           </div>
         </div>
@@ -136,7 +136,6 @@
           dot.setAttribute("aria-label", `View slide ${i + 1}`);
           dot.addEventListener("click", () => {
             showSlide(i);
-            resetAutoPlay();
           });
           dotsContainer.appendChild(dot);
         });
@@ -160,7 +159,6 @@
 
       buildDots();
       showSlide(0);
-      resetAutoPlay();
     </script>
   </body>
 </html>
