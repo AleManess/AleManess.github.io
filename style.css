@@ -124,7 +124,7 @@ h3 {
 }
 
 .slideshow-page {
-  width: 90vw;
+  width: 80vw;
   min-height: 80vh;
   display: flex;
   align-items: center;
@@ -134,18 +134,20 @@ h3 {
 }
 
 .slide-container {
-  width: 100%;
+  width: 70%;
+  min-height: 70vh;
   border: 2px solid #8b5cf6;
   border-radius: 18px;
   padding: 22px;
   box-shadow: 0 0 35px rgba(107, 33, 168, 0.75);
+  background: linear-gradient(90deg, rgb(67, 3, 87), rgb(96, 6, 148))
 }
 
 .slide-container h1 {
   font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif;
   font-size: clamp(1.4rem, 2.2vw, 2.2rem);
   color: #00ff2a;
-  margin-bottom: 1px;
+  margin-bottom: 5px;
 }
 
 .slideshow {
