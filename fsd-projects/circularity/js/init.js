@@ -26,6 +26,14 @@ var init = function (window) {
 
 
         // TODO 2 : Create a function that draws a circle 
+        /* Gamification.init({
+            canvas: canvas,
+            view: view,
+            draw: draw,
+            physikz: physikz,
+            circles: circles,
+            game: game
+        }); */
         function drawCircle(){
             circle = draw.randomCircleInArea(canvas, true, true, "#999", 2);
             physikz.addRandomVelocity(circle, canvas, 5, 5);
@@ -43,7 +51,7 @@ var init = function (window) {
 
 
         // TODO 7 : Use a loop to create multiple circles
-        for (var i = 0; i <= 500; i++) {
+        for (var i = 0; i <= 1000; i++) {
             drawCircle()
         }
 
@@ -79,8 +87,10 @@ var init = function (window) {
             physikz.updatePosition(circles[i])
             game.checkCirclePosition(circles[i])
            }
+           // Gamification.update()
             
         }
+        
     
         /* 
         This Function should check the position of a circle that is passed to the 
@@ -96,20 +106,20 @@ var init = function (window) {
             var bottomEdge = circle.y + circle.radius
 
             if ( leftEdge > canvas.width ) {
-                circle.x = 0;
+                circle.x = 0 - circle.radius;
             }
             
             // TODO 6 : YOUR CODE STARTS HERE //////////////////////
             if ( rightEdge < 0 ) {
-                circle.x = canvas.width
+                circle.x = canvas.width + circle.radius
             }
 
             if ( topEdge > canvas.height ) {
-                circle.y = 0
+                circle.y = 0 - circle.radius
             }
 
             if ( bottomEdge < 0 ) {
-                circle.y = canvas.height
+                circle.y = canvas.height + circle.radius
             }
 
 
